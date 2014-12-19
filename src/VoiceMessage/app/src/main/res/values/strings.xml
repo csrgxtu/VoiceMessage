@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">VoiceMessage</string>
+    <string name="app_intro">VoiceMessage is an application that auto answer the incoming
+        phone call if you are not available to answering the incoming call.\n\nBasicly it is used
+        to answer the incoming phone call with a welcoming voice message and then let the
+        caller leave an voice message.\n\nYou can record your own welcome message to make it even
+        humourous if you like.</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
