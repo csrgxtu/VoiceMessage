@@ -1,13 +1,11 @@
 package com.csrgxtu.android.intentservicetut;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -15,23 +13,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        /*
-         * Creates a new Intent to start the RSSPullService
-         * IntentService. Passes a URI in the
-         * Intent's "data" field.
-         */
-        String dataUrl = "http://www.52nlp.cn/feed";
-        Intent mServiceIntent = new Intent(this, RSSPullService.class);
-        mServiceIntent.setData(Uri.parse(dataUrl));
-        this.startService(mServiceIntent);
-
-        Context context = getApplicationContext();
-        CharSequence text = "Hello toast!";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+        setContentView(R.layout.activity_maina);
     }
 
 
@@ -55,5 +37,17 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Method to start the service
+    public void startService(View view) {
+        Intent mServiceIntent = new Intent(this, MyService.class);
+        mServiceIntent.putExtra("TIME", 5);
+        startService(mServiceIntent);
+    }
+
+    // Method to stop the service
+    public void stopService(View view) {
+        stopService(new Intent(getBaseContext(), MyService.class));
     }
 }
