@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.everysoft.autoanswer"
+      android:versionCode="6"
+      android:versionName="1.5">
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".AutoAnswerPreferenceActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver android:name=".AutoAnswerReceiver" android:enabled="true">
+        	<intent-filter>
+        		<action android:name="android.intent.action.PHONE_STATE" />
+        	</intent-filter>
+        </receiver>
+        <receiver android:name=".AutoAnswerBootReceiver" android:enabled="true">
+        	<intent-filter>
+        		<action android:name="android.intent.action.BOOT_COMPLETED" />
+        	</intent-filter>
+        </receiver>
+        <service android:name="AutoAnswerIntentService" />
+    </application>
+    <uses-sdk android:minSdkVersion="6" />
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+</manifest> 

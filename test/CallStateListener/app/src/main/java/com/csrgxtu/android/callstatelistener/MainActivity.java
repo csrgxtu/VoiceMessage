@@ -5,9 +5,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.lang.reflect.Method;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -44,23 +47,62 @@ public class MainActivity extends ActionBarActivity {
     }
 
     class TeleListener extends PhoneStateListener {
-        
+        private static final String TAG = "TeleListener";
+        private int ringCount = 0;
+
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE:
-                    Toast.makeText(getApplicationContext(), "CALL_STATE_IDLE", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "CALL_STATE_IDLE", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "CALL_STATE_IDLE");
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    Toast.makeText(getApplicationContext(), "CALL_STATE_OFFHOOK", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "CALL_STATE_OFFHOOK", Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "CALL_STATE_OOFHOOK");
                     break;
                 case TelephonyManager.CALL_STATE_RINGING:
-                    Toast.makeText(getApplicationContext(), incomingNumber, Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), "CALL_STATE_RINGING", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), incomingNumber, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "CALL_STATE_RINGING", Toast.LENGTH_SHORT).show();
+                    ringCount++;
+                    //Toast.makeText(getApplicationContext(), Integer.toString(ringCount), Toast.LENGTH_SHORT);
+                    Log.i(TAG, "CALL_STATE_RINGING");
+//                    killCall();
                     break;
                 default:
                     break;
             }
+        }
+
+        public boolean killCall() {
+            try {
+                // Get the boring old TelephonyManager
+                TelephonyManager telephonyManager =
+                        (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+
+                // Get the getITelephony() method
+                Class classTelephony = Class.forName(telephonyManager.getClass().getName());
+                Method methodGetITelephony = classTelephony.getDeclaredMethod("getITelephony");
+
+                // Ignore that the method is supposed to be private
+                methodGetITelephony.setAccessible(true);
+
+                // Invoke getITelephony() to get the ITelephony interface
+                Object telephonyInterface = methodGetITelephony.invoke(telephonyManager);
+
+                // Get the endCall method from ITelephony
+                Class telephonyInterfaceClass =
+                        Class.forName(telephonyInterface.getClass().getName());
+                Method methodEndCall = telephonyInterfaceClass.getDeclaredMethod("endCall");
+
+                // Invoke endCall()
+                methodEndCall.invoke(telephonyInterface);
+
+            } catch (Exception ex) { // Many things can go wrong with reflection calls
+                Log.d(TAG,"PhoneStateReceiver **" + ex.toString());
+                return false;
+            }
+            return true;
         }
     }
 }
